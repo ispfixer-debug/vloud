@@ -16,16 +16,17 @@ kotlin {
         }
     }
 
-    listOf(
-        iosX64(), // For iOS simulators on Intel Macs
-        iosArm64(), // For physical iOS devices
-        //iosSimulatorArm64() // For iOS simulators on Apple Silicon Macs
-    ).forEach {
-        it.binaries.framework {
-            baseName = "shared"
-            isStatic = true
-        }
-    }
+    // iOS stripped for VITO MVP — Android-only
+    // listOf(
+    //     iosX64(), // For iOS simulators on Intel Macs
+    //     iosArm64(), // For physical iOS devices
+    //     //iosSimulatorArm64() // For iOS simulators on Apple Silicon Macs
+    // ).forEach {
+    //     it.binaries.framework {
+    //         baseName = "shared"
+    //         isStatic = true
+    //     }
+    // }
 
     sourceSets {
         all {
@@ -60,11 +61,7 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)
         }
-        iosMain.dependencies {
-            implementation(libs.ktor.client.darwin)
-            implementation(libs.stately.isolate)
-            implementation(libs.stately.iso.collections)
-        }
+        // iOS stripped - no iosMain dependencies needed
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
@@ -72,7 +69,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.ramo.getride"
+    namespace = "com.vito.app"
     compileSdk = 34
     defaultConfig {
         minSdk = 24

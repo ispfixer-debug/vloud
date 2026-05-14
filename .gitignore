@@ -1,22 +1,13 @@
+# Build
+/build/
+/androidApp/build/
+/shared/build/
+.gradle/
+.kotlin/
+
+# IDE
+.idea/
 *.iml
-.gradle
-.idea
-.DS_Store
-build
-captures
-.externalNativeBuild
-.cxx
+
+# Local config
 local.properties
-xcuserdata
-Views.kt
-Auth.kt
-Storage.kt
-BaseRepoImp.kt
-Converter.kt
-AppModule.kt
-ConstSecure.kt
-common
-map
-androidApp/src/main/AndroidManifest.xml
-/iosApp/iosApp/global/ui/Views.swift
-/iosApp/iosApp/ui/common

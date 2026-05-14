@@ -1,4 +1,4 @@
-package com.ramo.getride.di
+package com.vito.app.di
 
 import org.koin.core.context.startKoin
 

@@ -14,6 +14,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "GetRide"
+rootProject.name = "Vito"
 include(":androidApp")
 include(":shared")

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get VITO - Download</title>
+    <style>
+        :root {
+            --bg: #0A0A0A;
+            --surface: #121212;
+            --text: #F5F5F5;
+            --text-muted: #888;
+            --green: #00D97E;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .container {
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+        h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+            color: var(--green);
+        }
+        .tagline {
+            color: var(--text-muted);
+            margin-bottom: 32px;
+        }
+        .referral-box {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+            display: none;
+        }
+        .referral-box.show {
+            display: block;
+        }
+        .referral-text {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+        .driver-name {
+            color: var(--green);
+            font-weight: bold;
+        }
+        .error-box {
+            background: #2a1212;
+            border: 1px solid #ff4757;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+            display: none;
+        }
+        .error-box.show {
+            display: block;
+        }
+        .error-text {
+            color: #ff4757;
+        }
+        .download-btn {
+            background: var(--green);
+            color: #000;
+            border: none;
+            padding: 16px 32px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            width: 100%;
+            max-width: 300px;
+        }
+        .download-btn:disabled, .download-btn.hidden {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .loading {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>VITO</h1>
+        <p class="tagline">Your ride, delivered.</p>
+        
+        <div id="loading" class="loading">Loading...</div>
+        
+        <div id="referral-box" class="referral-box">
+            <p class="referral-text">You're invited by</p>
+            <p id="driver-name" class="driver-name">Driver</p>
+        </div>
+        
+        <div id="error-box" class="error-box">
+            <p id="error-text" class="error-text">This invite link has expired or is no longer valid.</p>
+        </div>
+        
+        <a id="download-btn" class="download-btn" href="#">Download App</a>
+    </div>
+    
+    <script>
+        // Configuration - Edge Function URL
+        const SUPABASE_URL = 'https://qxyezswhknovainoxhfz.supabase.co';
+        const VITO_QR_INFO_URL = `${SUPABASE_URL}/functions/v1/vito-qr-info`;
+        
+        // Get token from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        
+        // APK URL - configurable per environment
+        const APK_URL = 'https://example.com/vito.apk';
+        
+        const driverNameEl = document.getElementById('driver-name');
+        const referralBox = document.getElementById('referral-box');
+        const errorBox = document.getElementById('error-box');
+        const errorText = document.getElementById('error-text');
+        const downloadBtn = document.getElementById('download-btn');
+        const loadingEl = document.getElementById('loading');
+        
+        async function checkToken() {
+            if (!token) {
+                // No token - show download button directly
+                showDownload();
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${VITO_QR_INFO_URL}?token=${token}`);
+                const data = await response.json();
+                
+                loadingEl.style.display = 'none';
+                
+                if (response.ok && data.valid) {
+                    // Valid token - show referral info
+                    if (data.driver_name) {
+                        driverNameEl.textContent = data.driver_name;
+                        referralBox.classList.add('show');
+                    }
+                    downloadBtn.href = `${APK_URL}?ref=${token}`;
+                } else {
+                    // Invalid/expired token - show error
+                    errorText.textContent = data.error || 'This invite link has expired or is no longer valid.';
+                    errorBox.classList.add('show');
+                    downloadBtn.classList.add('hidden');
+                    downloadBtn.removeAttribute('href');
+                }
+            } catch (e) {
+                // Network error - show error but allow download
+                loadingEl.style.display = 'none';
+                errorText.textContent = 'Could not verify invite. Please try downloading anyway.';
+                errorBox.classList.add('show');
+            }
+        }
+        
+        function showDownload() {
+            loadingEl.style.display = 'none';
+            downloadBtn.href = APK_URL;
+        }
+        
+        checkToken();
+    </script>
+</body>
+</html>
