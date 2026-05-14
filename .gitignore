@@ -1,7 +1,7 @@
 # Build
 /build/
-/androidApp/build/
-/shared/build/
+androidApp/build/
+shared/build/
 .gradle/
 .kotlin/
 
@@ -11,3 +11,7 @@
 
 # Local config
 local.properties
+
+# Gradle cache
+gradle/
+.DS_Store
