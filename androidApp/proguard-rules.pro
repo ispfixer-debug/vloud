@@ -1,7 +1,12 @@
 # VITO ProGuard Rules
+
 # Keep serialization classes
 -keep class com.vito.app.data.model.** { *; }
 -keepattributes *Annotation*
+
+# Don't warn about missing SLF4J
+-dontwarn org.slf4j.impl.**
+-dontwarn org.slf4j.**
 
 # Kotlin Serialization
 -keepattributes *Annotation*, InnerClasses

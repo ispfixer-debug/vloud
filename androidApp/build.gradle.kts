@@ -14,6 +14,9 @@ android {
         targetSdk = 34
         versionCode = 4
         versionName = "1.0"
+        ndk {
+            abiFilters += listOf("armeabi-v7a", "arm64-v8a")
+        }
     }
     buildFeatures {
         buildConfig = true
@@ -66,7 +69,12 @@ android {
         }
         release {
             buildConfigField("Boolean", "DEBUG_BYPASS_LOGIN", "false")
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
             signingConfig = signingConfigs.getByName("debug")
         }
     }
